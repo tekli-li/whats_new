@@ -1,0 +1,29 @@
+spring:
+    # 配置文件上传大小限制
+    servlet:
+      multipart:
+        max-file-size: 100MB
+        max-request-size: 100MB
+
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/whatsnew
+      username: root
+      password: root1234
+    #redis
+    data:
+      redis:
+        host: localhost
+        port: 6379
+#开启驼峰命名和下划线命名转换
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+#minio
+minio:
+  endpoint: http://47.98.196.217:9000/ #Minio服务所在地址
+  bucketName: whats-new-pics #存储桶名称
+  accessKey: root #访问的key
+  secretKey: root1234 #访问的秘钥
+

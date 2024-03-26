@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        // axios({
+        //     method:'get',
+        //     url:'http://localhost:8080/article/getAll'
+        // }).then(result=>{
+        //     // 成功回调
+        //     console.log(result.data)
+        // }).catch(result=>{
+        //     //失败回调
+        //     console.log(err);
+        // })
+        let article={
+            title:'明天会更好',
+            category:'生活',
+            time:'2000-01-01',
+            state:'草稿'
+        }
+        axios({
+            method:'post',
+            url:'http://localhost:8080/article/add',
+            data:article
+        }).then(result=>{
+            // 成功回调
+            console.log(result.data)
+        }).catch(result=>{
+            //失败回调
+            console.log(err);
+        })
+    </script>
+</body>
+</html>
