@@ -59,7 +59,9 @@ public class ArticleServiceImpl implements ArticleService {
     public Article viewArticle(String articleId) {
         Map<String , Object> claims = ThreadLocalUtil.get();
         String userId = (String) claims.get("id");
-        return null;
+        Article article = articleMapper.getArticle(articleId);
+        articleMapper.addViewRecord(userId, articleId);
+        return article;
     }
 
     @Override

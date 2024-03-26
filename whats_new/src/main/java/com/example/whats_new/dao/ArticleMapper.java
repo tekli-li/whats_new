@@ -4,6 +4,7 @@ import com.example.whats_new.pojo.Article;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
@@ -19,4 +20,11 @@ public interface ArticleMapper {
     @Update("UPDATE article SET title=#{title}, content=#{content}, category_id=#{categoryId}, state=#{state}, " +
             "update_time=#{updateTime}, cover_img=#{coverImg} WHERE id=#{id}")
     void update(Article article);
+
+    @Select("SELECT * FROM article WHERE id=#{articleId}")
+    Article getArticle(String articleId);
+
+    @Select("INSERT INTO view_history (user_id, article_id, view_time) " +
+            "VALUES (#{userId}, #{articleId}, NOW())")
+    void addViewRecord(String userId, String articleId);
 }
