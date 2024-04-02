@@ -7,9 +7,10 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 @Data
-public class Article {
+public class Article implements Serializable {
     private Integer id;//主键ID
     @NotEmpty
     @Pattern(regexp = "^\\S{1,10}$")
@@ -29,5 +30,6 @@ public class Article {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;//更新时间
     private Integer likes;
-    private Integer favourites;
+    private Integer favorites;
+    private Integer viewNum;
 }

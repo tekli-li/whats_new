@@ -17,6 +17,7 @@ public class Comment {
     private int articleId;
     @NotNull
     private int userId;
+    private int root;
     @JsonFormat(pattern = "yy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;//创建时间
     @JsonFormat(pattern = "yy-MM-dd HH:mm:ss")

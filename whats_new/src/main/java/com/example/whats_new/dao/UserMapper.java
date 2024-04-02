@@ -1,10 +1,13 @@
 package com.example.whats_new.dao;
 
 import com.example.whats_new.pojo.User;
+import com.example.whats_new.pojo.ViewHistory;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -20,4 +23,10 @@ public interface UserMapper {
     void uploadAvatar(String fileUrl, Integer id);
     @Update("update user set user_pic=#{url},update_time=now() where id=#{id}")
     void updateAvatar(String url, Integer id);
+    @Select("SELECT * FROM view_history WHERE user_id=#{userId}")
+    List<ViewHistory> getViewHistory(Integer userId);
+    @Select("SELECT * FROM view_history WHERE user_id=#{userId} AND article_id=#{articleId}")
+    ViewHistory viewHistoryIsExist(Integer userId, Integer articleId);
+    @Update("UPDATE view_history SET view_time=now() WHERE id=#{id}")
+    void updateViewHistory(Integer id);
 }

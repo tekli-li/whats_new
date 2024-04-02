@@ -2,6 +2,7 @@ package com.example.whats_new.service.Impl;
 
 import com.example.whats_new.dao.UserMapper;
 import com.example.whats_new.pojo.User;
+import com.example.whats_new.pojo.ViewHistory;
 import com.example.whats_new.service.UserService;
 import com.example.whats_new.utils.Md5Util;
 import com.example.whats_new.utils.ThreadLocalUtil;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -55,5 +57,15 @@ public class UserServiceImpl implements UserService {
         Map<String , Object> claims = ThreadLocalUtil.get();
         Integer id = (Integer) claims.get("id");
         userMapper.updateAvatar(url, id);
+    }
+
+    @Override
+    public List<ViewHistory> getViewHistory(Integer userId) {
+        return userMapper.getViewHistory(userId);
+    }
+
+    @Override
+    public ViewHistory viewHistoryIsExist(Integer userId, Integer articleId) {
+        return userMapper.viewHistoryIsExist(userId, articleId);
     }
 }

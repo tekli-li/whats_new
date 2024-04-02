@@ -18,13 +18,21 @@ public interface ArticleMapper {
     List<Article> list(Integer categoryId, String state);
 
     @Update("UPDATE article SET title=#{title}, content=#{content}, category_id=#{categoryId}, state=#{state}, " +
-            "update_time=#{updateTime}, cover_img=#{coverImg} WHERE id=#{id}")
+            "update_time=#{updateTime}, cover_img=#{coverImg}, favorites=#{favorites}, likes=#{likes}, view_num=#{viewNum} WHERE id=#{id}")
     void update(Article article);
 
     @Select("SELECT * FROM article WHERE id=#{articleId}")
-    Article getArticle(String articleId);
+    Article getArticle(Integer articleId);
 
     @Select("INSERT INTO view_history (user_id, article_id, view_time) " +
             "VALUES (#{userId}, #{articleId}, NOW())")
-    void addViewRecord(String userId, String articleId);
+    void addViewRecord(String userId, Integer articleId);
+    @Select("SELECT * FROM article")
+    List<Article> listAllArticle();
+    @Select("INSERT INTO like_table (user_id, article_id, create_time) " +
+            "VALUES (#{userId}, #{articleId}, NOW())")
+    void executeLike(Integer articleId, String userId);
+    @Select("INSERT INTO favorite (user_id, article_id, create_time) " +
+            "VALUES (#{userId}, #{articleId}, NOW())")
+    void executeFavorite(Integer articleId, String userId);
 }
