@@ -11,6 +11,9 @@ import UserInfoVue from '@/views/user/UserInfo.vue'
 import UserResetPasswordVue from '@/views/user/UserResetPassword.vue'
 import UserLayoutVue from '@/views/UserLayout.vue'
 import UserCategoryVue from '@/views/article/UserCategory.vue'
+import UserRecommendVue from '@/views/article/UserRecommend.vue'
+import UserHistoryVue from '@/views/user/UserHistory.vue'
+import UserMineVue from '@/views/user/UserMine.vue'
 
 //定义路由关系
 const routes = [
@@ -18,7 +21,10 @@ const routes = [
     {
         path: '/', component: UserLayoutVue,
         children: [
+            {path: '/article/recommend', component: UserRecommendVue},
             {path: '/article/category', component: UserCategoryVue},
+            {path: '/user/history', component: UserHistoryVue},
+            {path: '/user/mine', component: UserMineVue}
         ]
 
     },

@@ -16,8 +16,20 @@ import { ElMessageBox } from 'element-plus';
 import {ElMessage} from 'element-plus';
 const router = useRouter()
 
+const clickRecommend = ()=>{
+    router.push('/article/recommend');
+}
+
 const clickCat = ()=>{
     router.push('/article/category');
+}
+
+const clickHistory = ()=>{
+    router.push('/article/history');
+}
+
+const clickMine = ()=>{
+    router.push('/article/mine');
 }
 </script>
 
@@ -28,10 +40,10 @@ const clickCat = ()=>{
                 <el-row type="flex" justify="center" align="middle">
                 <el-menu class="el-menu" mode="horizontal" background-color="transparent" text-color="#000" active-text-color="blue">
                     <el-menu-item index="1">推荐</el-menu-item>
-                    <el-menu-item index="2" @click="clickCat()">分类</el-menu-item>
-                    <el-menu-item index="3">收藏</el-menu-item>
-                    <el-menu-item index="4">历史</el-menu-item>
-                    <el-menu-item index="5">我的</el-menu-item>
+                    <el-menu-item index="2" @click="clickRecommend()">分类</el-menu-item>
+                    <el-menu-item index="3" @click="clickCat()">收藏</el-menu-item>
+                    <el-menu-item index="4" @click="clickHistory()">历史</el-menu-item>
+                    <el-menu-item index="5" @click="clickMine()">我的</el-menu-item>
                 </el-menu>
                 <el-input placeholder="搜索..." style="width: 200px; background-color: transparent" ></el-input>
                 <el-button type="primary" style="background-color: transparent; color: #000;" >搜索</el-button>
