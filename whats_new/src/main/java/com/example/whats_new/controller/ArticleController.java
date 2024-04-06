@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/article")
@@ -43,12 +44,14 @@ public class ArticleController {
     }
     @GetMapping("/view")
     public Result viewArticle(Integer articleId) {
-        Article article = articleService.viewArticle(articleId);
-        articleService.addViewNum(article);
+        Article article = articleService.getArticle(articleId);
+        articleService.viewArticle(articleId);
+        article = articleService.addViewNum(article);
         return Result.success(article);
     }
     @PostMapping("/like")
-    public Result like(@RequestBody Integer articleId) {
+    public Result like(@RequestBody Map<String, Integer> requestBody) {
+        Integer articleId = requestBody.get("articleId");
         articleService.executeLike(articleId);
         Article article = articleService.getArticle(articleId);
         articleService.addLikeNum(article);
@@ -56,7 +59,8 @@ public class ArticleController {
     }
 
     @PostMapping("/favorite")
-    public Result favorite(@RequestBody Integer articleId) {
+    public Result favorite(@RequestBody Map<String, Integer> requestBody) {
+        Integer articleId = requestBody.get("articleId");
         articleService.executeFavorite(articleId);
         Article article = articleService.getArticle(articleId);
         articleService.addFavoriteNum(article);

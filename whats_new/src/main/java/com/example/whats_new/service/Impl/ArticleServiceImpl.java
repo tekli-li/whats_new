@@ -7,6 +7,7 @@ import com.example.whats_new.pojo.PageBean;
 import com.example.whats_new.pojo.ViewHistory;
 import com.example.whats_new.service.ArticleService;
 import com.example.whats_new.service.UserService;
+import com.example.whats_new.utils.RatingCalculateUtil;
 import com.example.whats_new.utils.RedisCache;
 import com.example.whats_new.utils.ThreadLocalUtil;
 import com.github.pagehelper.Page;
@@ -17,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -37,6 +37,8 @@ public class ArticleServiceImpl implements ArticleService {
     private UserService userService;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private RatingCalculateUtil ratingCalculateUtil;
 
     @Override
     public void addArticle(Article article) {
@@ -78,25 +80,20 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    @Cacheable(cacheNames = "articles",key = "(#articleId)")
-    public Article viewArticle(Integer articleId) {
+//    @Cacheable(cacheNames = "articles",key = "(#articleId)")
+    public void viewArticle(Integer articleId) {
         //获取用户id
         Map<String , Object> claims = ThreadLocalUtil.get();
         String userId = String.valueOf(claims.get("id")) ;
-        Article article = articleMapper.getArticle(articleId);
+//        Article article = articleMapper.getArticle(articleId);
         ViewHistory viewHistory = userService.viewHistoryIsExist(Integer.valueOf(userId), articleId);
+        ratingCalculateUtil.refreshRating("view", Integer.parseInt(userId), articleId);
         //写入浏览记录
         if (viewHistory != null) {
             userMapper.updateViewHistory(viewHistory.getId());
         } else {
             articleMapper.addViewRecord(userId, articleId);
         }
-
-//        //更新浏览量，先写入redis
-//        article.setViewNum(article.getViewNum() + 1);
-//        redisCache.incrementCacheMapValue("newsViewHistory", String.valueOf(articleId), 1);
-//        article.setViewNum(redisCache.getCacheMapValue("newsViewHistory", article.getId()));
-        return article;
     }
 
     @Override
@@ -110,7 +107,7 @@ public class ArticleServiceImpl implements ArticleService {
         Map<String , Object> claims = ThreadLocalUtil.get();
         String userId = String.valueOf(claims.get("id")) ;
         Article article = articleMapper.getArticle(articleId);
-
+        ratingCalculateUtil.refreshRating("like", Integer.parseInt(userId), articleId);
         articleMapper.executeLike(articleId, userId);
     }
 
@@ -120,6 +117,7 @@ public class ArticleServiceImpl implements ArticleService {
         Map<String , Object> claims = ThreadLocalUtil.get();
         String userId = String.valueOf(claims.get("id")) ;
         Article article = articleMapper.getArticle(articleId);
+        ratingCalculateUtil.refreshRating("favorite", Integer.parseInt(userId), articleId);
         articleMapper.executeFavorite(articleId, userId);
     }
 
@@ -131,13 +129,13 @@ public class ArticleServiceImpl implements ArticleService {
 
     @CachePut(cacheNames = "articles",key = "(#article.getId())")
     public Article addLikeNum(Article article) {
-        article.setViewNum(article.getLikes() + 1);
+        article.setLikes(article.getLikes() + 1);
         return article;
     }
 
     @CachePut(cacheNames = "articles",key = "(#article.getId())")
     public Article addFavoriteNum(Article article) {
-        article.setViewNum(article.getFavorites() + 1);
+        article.setFavorites(article.getFavorites() + 1);
         return article;
     }
 

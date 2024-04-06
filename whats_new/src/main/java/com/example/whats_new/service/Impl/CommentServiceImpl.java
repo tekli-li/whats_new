@@ -4,6 +4,7 @@ import com.example.whats_new.dao.CommentMapper;
 import com.example.whats_new.pojo.Comment;
 import com.example.whats_new.pojo.CommentTree;
 import com.example.whats_new.service.CommentService;
+import com.example.whats_new.utils.RatingCalculateUtil;
 import com.example.whats_new.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import java.util.Map;
 public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentMapper commentMapper;
+    @Autowired
+    private RatingCalculateUtil ratingCalculateUtil;
     @Override
     public List<CommentTree> getCommentsByArticle(Integer articleId) {
         List<Comment> comments = commentMapper.getCommentsByArticle(articleId);
@@ -44,6 +47,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setCreateTime(LocalDateTime.now());
         comment.setUpdateTime(LocalDateTime.now());
         System.out.println(comment);
+        ratingCalculateUtil.refreshRating("comment", Integer.parseInt(userId), comment.getArticleId());
         commentMapper.addArticleComment(comment);
     }
 

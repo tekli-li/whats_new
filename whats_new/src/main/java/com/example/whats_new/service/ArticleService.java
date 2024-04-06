@@ -2,7 +2,6 @@ package com.example.whats_new.service;
 
 import com.example.whats_new.pojo.Article;
 import com.example.whats_new.pojo.PageBean;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public interface ArticleService {
 
     void updateArticle(Article article);
 
-    Article viewArticle(Integer articleId);
+    void viewArticle(Integer articleId);
 
     Article getArticle(Integer articleId);
 
