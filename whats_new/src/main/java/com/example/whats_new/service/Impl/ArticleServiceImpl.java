@@ -80,7 +80,6 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-//    @Cacheable(cacheNames = "articles",key = "(#articleId)")
     public void viewArticle(Integer articleId) {
         //获取用户id
         Map<String , Object> claims = ThreadLocalUtil.get();

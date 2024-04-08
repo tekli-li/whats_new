@@ -1,6 +1,7 @@
 package com.example.whats_new.dao;
 
 import com.example.whats_new.pojo.User;
+import com.example.whats_new.pojo.UserArticleRating;
 import com.example.whats_new.pojo.ViewHistory;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -29,4 +30,8 @@ public interface UserMapper {
     ViewHistory viewHistoryIsExist(Integer userId, Integer articleId);
     @Update("UPDATE view_history SET view_time=now() WHERE id=#{id}")
     void updateViewHistory(Integer id);
+    @Select("select * from user where id=#{id}")
+    User findUserById(Integer id);
+    @Select("SELECT * FROM user_article_rating where user_id=#{id};")
+    List<UserArticleRating> getUserArticleRating(Integer id);
 }
