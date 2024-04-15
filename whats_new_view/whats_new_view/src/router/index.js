@@ -14,6 +14,7 @@ import UserCategoryVue from '@/views/article/UserCategory.vue'
 import UserRecommendVue from '@/views/article/UserRecommend.vue'
 import UserHistoryVue from '@/views/user/UserHistory.vue'
 import UserMineVue from '@/views/user/UserMine.vue'
+import UserFavoriteVue from '@/views/article/UserFavorite.vue'
 
 //定义路由关系
 const routes = [
@@ -22,6 +23,7 @@ const routes = [
         path: '/', component: UserLayoutVue,
         children: [
             {path: '/article/recommend', component: UserRecommendVue},
+            {path: '/article/favorite', component: UserFavoriteVue},
             {path: '/article/category', component: UserCategoryVue},
             {path: '/user/history', component: UserHistoryVue},
             {path: '/user/mine', component: UserMineVue}

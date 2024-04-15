@@ -22,6 +22,8 @@ public interface ArticleService {
 
     void executeFavorite(Integer articleId);
 
+    PageBean<Article> recommend(Integer userId, Integer pageNum, Integer pageSize);
+
     Article addViewNum(Article article);
 
     Article addLikeNum(Article article);

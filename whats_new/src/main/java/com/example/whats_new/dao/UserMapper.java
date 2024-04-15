@@ -34,4 +34,6 @@ public interface UserMapper {
     User findUserById(Integer id);
     @Select("SELECT * FROM user_article_rating where user_id=#{id};")
     List<UserArticleRating> getUserArticleRating(Integer id);
+    @Select("SELECT * FROM user")
+    List<User> listUsers();
 }

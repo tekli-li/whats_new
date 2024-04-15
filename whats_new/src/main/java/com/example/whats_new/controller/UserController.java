@@ -3,12 +3,14 @@ package com.example.whats_new.controller;
 import com.example.whats_new.config.MinioProp;
 import com.example.whats_new.pojo.Result;
 import com.example.whats_new.pojo.User;
+import com.example.whats_new.pojo.ViewHistory;
 import com.example.whats_new.service.MinioService;
 import com.example.whats_new.service.UserService;
 import com.example.whats_new.utils.JwtUtil;
 import com.example.whats_new.utils.Md5Util;
 import com.example.whats_new.utils.ThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -19,10 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -106,31 +105,16 @@ public class UserController {
         operations.getOperations().delete(token);
         return Result.success();
     }
-//    @PostMapping("/uploadAvatar")
-//    public Result uploadAvatar(MultipartFile file) {
-//        try {
-//            String fileName = file.getOriginalFilename();
-//            assert fileName != null;
-//
-//            // 根据业务设计，设置存储路径：按天创建目录
-//            String objectName = new SimpleDateFormat("yyyy-MM-dd/").format(new Date())
-//                    + UUID.randomUUID().toString()
-//                    + fileName.substring(fileName.lastIndexOf("."));
-//
-//            minioService.upload(file);
-//            log.info("文件格式为:{}", file.getContentType());
-//            log.info("文件原名称为:{}", fileName);
-//            log.info("文件对象路径为:{}", objectName);
-//            userService.uploadAvatar(minioService.getFileUrl(fileName));
-//            return Result.success(minioService.getFileUrl(fileName));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return Result.error("上传失败");
-//        }
-//    }
+
     @PatchMapping("/updateAvatar")
     public Result updateAvatar(String avatarUrl) {
         userService.updateAvatar(avatarUrl);
         return Result.success();
+    }
+
+    @GetMapping("/getViewRecord")
+    public Result getViewRecord(Integer userId) {
+        List<ViewHistory> viewHistories = userService.getViewHistory(userId);
+        return Result.success(viewHistories);
     }
 }

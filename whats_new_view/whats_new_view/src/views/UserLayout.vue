@@ -25,11 +25,15 @@ const clickCat = ()=>{
 }
 
 const clickHistory = ()=>{
-    router.push('/article/history');
+    router.push('/user/history');
 }
 
 const clickMine = ()=>{
-    router.push('/article/mine');
+    router.push('/user/mine');
+}
+
+const clickFav = ()=>{
+    router.push('/article/favorite');
 }
 </script>
 
@@ -39,9 +43,9 @@ const clickMine = ()=>{
             <el-header class="user-header">
                 <el-row type="flex" justify="center" align="middle">
                 <el-menu class="el-menu" mode="horizontal" background-color="transparent" text-color="#000" active-text-color="blue">
-                    <el-menu-item index="1">推荐</el-menu-item>
-                    <el-menu-item index="2" @click="clickRecommend()">分类</el-menu-item>
-                    <el-menu-item index="3" @click="clickCat()">收藏</el-menu-item>
+                    <el-menu-item index="1" @click="clickRecommend()">推荐</el-menu-item>
+                    <el-menu-item index="2" @click="clickCat()">分类</el-menu-item>
+                    <el-menu-item index="3" @click="clickFav()">收藏</el-menu-item>
                     <el-menu-item index="4" @click="clickHistory()">历史</el-menu-item>
                     <el-menu-item index="5" @click="clickMine()">我的</el-menu-item>
                 </el-menu>

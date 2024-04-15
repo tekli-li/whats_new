@@ -2,12 +2,11 @@ package com.example.whats_new.service.Impl;
 
 import com.example.whats_new.dao.ArticleMapper;
 import com.example.whats_new.dao.UserMapper;
-import com.example.whats_new.pojo.Article;
-import com.example.whats_new.pojo.PageBean;
-import com.example.whats_new.pojo.ViewHistory;
+import com.example.whats_new.pojo.*;
 import com.example.whats_new.service.ArticleService;
 import com.example.whats_new.service.UserService;
 import com.example.whats_new.utils.RatingCalculateUtil;
+import com.example.whats_new.utils.Recommend;
 import com.example.whats_new.utils.RedisCache;
 import com.example.whats_new.utils.ThreadLocalUtil;
 import com.github.pagehelper.Page;
@@ -15,14 +14,14 @@ import com.github.pagehelper.PageHelper;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +32,8 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleMapper articleMapper;
     @Resource
     private RedisCache redisCache;
+    @Resource
+    private Recommend recommend;
     @Autowired
     private UserService userService;
     @Autowired
@@ -119,6 +120,43 @@ public class ArticleServiceImpl implements ArticleService {
         ratingCalculateUtil.refreshRating("favorite", Integer.parseInt(userId), articleId);
         articleMapper.executeFavorite(articleId, userId);
     }
+
+    @Override
+    public PageBean<Article> recommend(Integer userId, Integer pageNum, Integer pageSize) {
+        List<User> users = userMapper.listUsers();
+        Map<Integer, Double> relations = recommend.computeNearestNeighbor(userId, users);
+        // 将 Map 转换为 List<Map.Entry<Integer, Double>>，方便排序
+        List<Map.Entry<Integer, Double>> entryList = new ArrayList<>(relations.entrySet());
+
+        // 使用 Collections.sort 对 List 进行排序，按照 Double 类型的值倒序排列
+        entryList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        // 将排序后的 List 转换回 Map
+        LinkedHashMap<Integer, Double> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<Integer, Double> entry : entryList) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        Integer firstKey = sortedMap.keySet().iterator().next();
+        PageBean<ViewHistory> pb = new PageBean<>();
+        PageHelper.startPage(pageNum, pageSize);
+        List<ViewHistory> viewHistories = userMapper.getViewHistory(firstKey);
+        Page<ViewHistory> p = (Page<ViewHistory>) viewHistories;
+
+        //把数据填充到PageBean中
+        pb.setTotal(p.getTotal());
+        pb.setItems(p.getResult());
+
+        List<Article> articles = new ArrayList<>();
+        PageBean<Article> articlePb = new PageBean<>();
+        articlePb.setTotal(p.getTotal());
+        for (ViewHistory viewHistory : p.getResult()) {
+            articles.add(articleMapper.getArticle(viewHistory.getArticleId()));
+        }
+        articlePb.setItems(articles);
+        return articlePb;
+    }
+
 
     @CachePut(cacheNames = "articles",key = "(#article.getId())")
     public Article addViewNum(Article article) {

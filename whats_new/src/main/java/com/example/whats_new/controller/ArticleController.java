@@ -76,4 +76,9 @@ public class ArticleController {
         List<CommentTree> commentTrees = commentService.getCommentsByArticle(articleId);
         return Result.success(commentTrees);
     }
+    @GetMapping("/recommend")
+    public Result recommend (Integer pageNum, Integer pageSize, Integer userId) {
+        PageBean<Article> recommend = articleService.recommend(userId, pageNum, pageSize);
+        return Result.success(recommend);
+    }
 }

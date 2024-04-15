@@ -3,9 +3,9 @@
 </script>
 
 <template>
-    <el-table :data="histories" style="width: 100%">
+    <el-table :data="favorites" style="width: 100%">
             <template #empty>
-                历史
+                收藏
             </template>
         </el-table>
 </template>

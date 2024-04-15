@@ -3,7 +3,9 @@ package com.example.whats_new.utils;
 import com.example.whats_new.dao.UserMapper;
 import com.example.whats_new.pojo.User;
 import com.example.whats_new.pojo.UserArticleRating;
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -13,29 +15,46 @@ import java.util.stream.Collectors;
 public class Recommend {
     @Autowired
     private UserMapper userMapper;
-    private Map<Double, Integer> computeNearestNeighbor(Integer userId, List<User> users) {
-        Map<Double, Integer> distances = new TreeMap<>();
+
+    public Map<Integer, Double> computeNearestNeighbor(Integer userId, List<User> users) {
+        Map<Integer, Double> distances = new TreeMap<>();
         User u1 = userMapper.findUserById(userId);
         List<UserArticleRating> u1Rating = userMapper.getUserArticleRating(userId);
-        for (int i = 0; i < users.size(); i++) {
-            User u2 = users.get(i);
+        for (User u2 : users) {
             if (!Objects.equals(u2.getId(), userId)) {
                 List<UserArticleRating> u2Rating = userMapper.getUserArticleRating(u2.getId());
                 double distance = pearson_dis(u2Rating, u1Rating);
-                distances.put(distance, u2.getId());
+                distances.put(u2.getId(), distance);
             }
-
         }
-        System.out.println("该用户与其他用户的皮尔森相关系数 -> " + distances);
-        return distances;
+
+        TreeMap<Integer, Double> sortedDistances = new TreeMap<>(Comparator.reverseOrder());
+        sortedDistances.putAll(distances);
+        System.out.println("该用户与其他用户的皮尔森相关系数 -> " + sortedDistances);
+        return sortedDistances;
     }
 
+
     private double pearson_dis(List<UserArticleRating> rating2, List<UserArticleRating> rating1) {
-        int size = rating1.size();
+        double correlation = 0.0;
+        List<Double> rating1ScoreCollect = new ArrayList<>();
+        List<Double> rating2ScoreCollect = new ArrayList<>();
         List<Map<Integer, Double>> intersection = getIntersection(rating2, rating1);
-        List<Double> rating1ScoreCollect = rating1.stream().map(UserArticleRating::getRating).toList();
-        List<Double> rating2ScoreCollect = rating2.stream().map(UserArticleRating::getRating).toList();
-        return 0.0;
+        for (Integer keys : intersection.get(0).keySet()) {
+            rating2ScoreCollect.add(intersection.get(0).get(keys));
+        }
+        for (Integer keys : intersection.get(1).keySet()) {
+            rating1ScoreCollect.add(intersection.get(1).get(keys));
+        }
+        System.out.println(Arrays.toString(rating1ScoreCollect.stream().mapToDouble(Double::doubleValue).toArray()));
+        System.out.println(Arrays.toString(rating2ScoreCollect.stream().mapToDouble(Double::doubleValue).toArray()));
+        double[] x = rating1ScoreCollect.stream().mapToDouble(Double::doubleValue).toArray();
+        double[] y = rating2ScoreCollect.stream().mapToDouble(Double::doubleValue).toArray();
+        PearsonsCorrelation pearsonsCorrelation = new PearsonsCorrelation();
+        if (x.length > 1 && y.length > 1) {
+            correlation = pearsonsCorrelation.correlation(x, y);
+        }
+        return correlation;
     }
 
     private List<Map<Integer, Double>> getIntersection(List<UserArticleRating> rating2, List<UserArticleRating> rating1) {
@@ -60,12 +79,12 @@ public class Recommend {
         // 提取出交集中articleId对应的rating，并保持顺序
         for (Integer id : intersection) {
             ratingMap1.put(id, rating1.stream()
-                    .filter(r -> r.getArticleId() == id)
+                    .filter(r -> Objects.equals(r.getArticleId(), id))
                     .map(UserArticleRating::getRating)
                     .findFirst()
                     .orElse(0.0)); // 如果没有对应的rating，默认为0.0
             ratingMap2.put(id, rating2.stream()
-                    .filter(r -> r.getArticleId() == id)
+                    .filter(r -> Objects.equals(r.getArticleId(), id))
                     .map(UserArticleRating::getRating)
                     .findFirst()
                     .orElse(0.0)); // 如果没有对应的rating，默认为0.0
