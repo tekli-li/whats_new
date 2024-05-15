@@ -18,6 +18,7 @@ import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -97,8 +98,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Cacheable(cacheNames = "articles",key = "(#articleId)")
     public Article getArticle(Integer articleId) {
-        return articleMapper.getArticle(articleId);
+        Article article = articleMapper.getArticle(articleId);
+        return article;
     }
 
     @Override
@@ -109,6 +112,24 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleMapper.getArticle(articleId);
         ratingCalculateUtil.refreshRating("like", Integer.parseInt(userId), articleId);
         articleMapper.executeLike(articleId, userId);
+    }
+
+    public void cancelLike(Integer articleId) {
+        Map<String , Object> claims = ThreadLocalUtil.get();
+        String userId = String.valueOf(claims.get("id")) ;
+        Article article = articleMapper.getArticle(articleId);
+        article.setLikes(article.getLikes() - 1);
+        articleMapper.update(article);
+        articleMapper.cancelLike(articleId, userId);
+    }
+
+    public void cancelFav(Integer articleId) {
+        Map<String , Object> claims = ThreadLocalUtil.get();
+        String userId = String.valueOf(claims.get("id")) ;
+        Article article = articleMapper.getArticle(articleId);
+        article.setFavorites(article.getFavorites() - 1);
+        articleMapper.update(article);
+        articleMapper.cancelFav(articleId, userId);
     }
 
     @Override
@@ -151,7 +172,7 @@ public class ArticleServiceImpl implements ArticleService {
         PageBean<Article> articlePb = new PageBean<>();
         articlePb.setTotal(p.getTotal());
         for (ViewHistory viewHistory : p.getResult()) {
-            articles.add(articleMapper.getArticle(viewHistory.getArticleId()));
+            articles.add(getArticle(viewHistory.getArticleId()));
         }
         articlePb.setItems(articles);
         return articlePb;
@@ -176,6 +197,12 @@ public class ArticleServiceImpl implements ArticleService {
         return article;
     }
 
+    @CachePut(cacheNames = "articles",key = "(#article.getId())")
+    public Article uploadCoverImg(Article article) {
+        article.setCoverImg(article.getCoverImg());
+        return article;
+    }
+
     @PostConstruct
     public void init() {
         log.info("新闻浏览量写入缓存开始==>");
@@ -185,5 +212,7 @@ public class ArticleServiceImpl implements ArticleService {
         log.info("<==新闻浏览量写入缓存成功");
     }
 
-
+    public List<Article> hotest(Integer limit, Integer offset) {
+        return articleMapper.hotest(limit, offset);
+    }
 }

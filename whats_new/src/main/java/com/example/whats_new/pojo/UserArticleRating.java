@@ -3,7 +3,6 @@ package com.example.whats_new.pojo;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
-import org.apache.hadoop.yarn.webapp.hamlet.HamletSpec;
 
 @Data
 public class UserArticleRating {

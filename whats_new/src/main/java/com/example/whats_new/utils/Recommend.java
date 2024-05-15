@@ -46,8 +46,8 @@ public class Recommend {
         for (Integer keys : intersection.get(1).keySet()) {
             rating1ScoreCollect.add(intersection.get(1).get(keys));
         }
-        System.out.println(Arrays.toString(rating1ScoreCollect.stream().mapToDouble(Double::doubleValue).toArray()));
-        System.out.println(Arrays.toString(rating2ScoreCollect.stream().mapToDouble(Double::doubleValue).toArray()));
+//        System.out.println(Arrays.toString(rating1ScoreCollect.stream().mapToDouble(Double::doubleValue).toArray()));
+//        System.out.println(Arrays.toString(rating2ScoreCollect.stream().mapToDouble(Double::doubleValue).toArray()));
         double[] x = rating1ScoreCollect.stream().mapToDouble(Double::doubleValue).toArray();
         double[] y = rating2ScoreCollect.stream().mapToDouble(Double::doubleValue).toArray();
         PearsonsCorrelation pearsonsCorrelation = new PearsonsCorrelation();
@@ -66,7 +66,6 @@ public class Recommend {
         List<Integer> articleIds2 = rating2.stream()
                 .map(UserArticleRating::getArticleId)
                 .collect(Collectors.toList());
-
         // 计算articleId的交集
         List<Integer> intersection = articleIds1.stream()
                 .filter(articleIds2::contains)

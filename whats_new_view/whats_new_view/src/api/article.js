@@ -36,3 +36,43 @@ export const articleAddService = (articleModel)=>{
 export const articleUpdateService = (articleModel)=>{
     return request.put('/article/updateArticle',articleModel)
 }
+
+//修改文章
+export const articleUpdateCoverImgService = (articleModel)=>{
+    return request.put('/article/updateCoverImg',articleModel)
+}
+
+//推荐文章
+export const articleRecommendService = (params)=>{
+    return request.get('/article/recommend',{ params: params })
+}
+
+//浏览文章
+export const articleViewService = (articleId)=>{
+    return request.get('/article/view?articleId='+articleId)
+}
+
+//推荐文章
+export const articleHistoryService = (params)=>{
+    return request.get('/user/getViewRecord',{ params: params })
+}
+
+//推荐文章
+export const articleFavoriteService = (params)=>{
+    return request.get('/user/getFavorite',{ params: params })
+}
+
+//添加评论
+export const commentAddService = (comment)=>{
+    return request.post('/article/addArticleComment',comment)
+}
+
+//获取评论列表
+export const commentListService = (articleId)=>{
+    return request.get('/article/getCommentsByArticle?articleId='+articleId)
+}
+
+//获取最热
+export const hotestListService = (loadParams)=>{
+    return request.post('/article/hotest',loadParams)
+}

@@ -2,10 +2,7 @@ package com.example.whats_new.dao;
 
 import com.example.whats_new.pojo.Article;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -35,4 +32,11 @@ public interface ArticleMapper {
     @Select("INSERT INTO favorite (user_id, article_id, create_time) " +
             "VALUES (#{userId}, #{articleId}, NOW())")
     void executeFavorite(Integer articleId, String userId);
+    @Select("SELECT* FROM article ORDER BY view_num DESC LIMIT #{limit} OFFSET #{offset};")
+    List<Article> hotest(Integer limit, Integer offset);
+    @Delete("DELETE FROM like_table WHERE user_id=#{userId} AND article_id=#{articleId}")
+    void cancelLike(Integer articleId, String userId);
+    @Delete("DELETE FROM favorite WHERE user_id=#{userId} AND article_id=#{articleId}")
+    void cancelFav(Integer articleId, String userId);
+
 }

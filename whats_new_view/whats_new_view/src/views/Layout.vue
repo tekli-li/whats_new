@@ -58,7 +58,7 @@ const handleCommand = (command)=>{
             })
     }else{
         //路由
-        router.push('/user/'+command)
+        router.push('/admin/user/'+command)
     }
 }
 </script>
@@ -70,13 +70,13 @@ const handleCommand = (command)=>{
             <div class="el-aside__logo"></div>
             <el-menu active-text-color="blue" background-color="#ffffff"  text-color="#232323"
                 router>
-                <el-menu-item index="/article/category">
+                <el-menu-item index="/admin/article/category">
                     <el-icon>
                         <Management />
                     </el-icon>
                     <span>文章分类</span>
                 </el-menu-item>
-                <el-menu-item index="/article/manage">
+                <el-menu-item index="/admin/article/manage">
                     <el-icon>
                         <Promotion />
                     </el-icon>
@@ -89,19 +89,19 @@ const handleCommand = (command)=>{
                         </el-icon>
                         <span>个人中心</span>
                     </template>
-                    <el-menu-item index="/user/info">
+                    <el-menu-item index="/admin/user/info">
                         <el-icon>
                             <User />
                         </el-icon>
                         <span>基本资料</span>
                     </el-menu-item>
-                    <el-menu-item index="/user/avatar">
+                    <el-menu-item index="/admin/user/avatar">
                         <el-icon>
                             <Crop />
                         </el-icon>
                         <span>更换头像</span>
                     </el-menu-item>
-                    <el-menu-item index="/user/resetPassword">
+                    <el-menu-item index="/admin/user/resetPassword">
                         <el-icon>
                             <EditPen />
                         </el-icon>

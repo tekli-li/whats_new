@@ -1,5 +1,6 @@
 package com.example.whats_new.dao;
 
+import com.example.whats_new.pojo.Favorite;
 import com.example.whats_new.pojo.User;
 import com.example.whats_new.pojo.UserArticleRating;
 import com.example.whats_new.pojo.ViewHistory;
@@ -26,6 +27,8 @@ public interface UserMapper {
     void updateAvatar(String url, Integer id);
     @Select("SELECT * FROM view_history WHERE user_id=#{userId}")
     List<ViewHistory> getViewHistory(Integer userId);
+    @Select("SELECT * FROM favorite WHERE user_id=#{userId}")
+    List<Favorite> getFavorites(Integer userId);
     @Select("SELECT * FROM view_history WHERE user_id=#{userId} AND article_id=#{articleId}")
     ViewHistory viewHistoryIsExist(Integer userId, Integer articleId);
     @Update("UPDATE view_history SET view_time=now() WHERE id=#{id}")

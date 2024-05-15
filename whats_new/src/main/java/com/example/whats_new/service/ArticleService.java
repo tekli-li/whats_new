@@ -29,4 +29,12 @@ public interface ArticleService {
     Article addLikeNum(Article article);
 
     Article addFavoriteNum(Article article);
+
+    Article uploadCoverImg(Article article);
+
+    List<Article> hotest(Integer limit, Integer offset);
+
+    void cancelLike(Integer articleId);
+
+    void cancelFav(Integer articleId);
 }

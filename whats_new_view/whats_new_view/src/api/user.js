@@ -33,3 +33,8 @@ export const userAvatarUpdateService=(avatarUrl)=>{
     params.append('avatarUrl',avatarUrl)
     return request.patch('/user/updateAvatar',params)
 }
+
+//修改头像
+export const userPwdUpdateService=(pwdModel)=>{
+    return request.patch('/user/updatePwd',pwdModel)
+}

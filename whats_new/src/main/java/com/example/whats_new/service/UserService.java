@@ -1,9 +1,9 @@
 package com.example.whats_new.service;
 
+import com.example.whats_new.pojo.Article;
+import com.example.whats_new.pojo.PageBean;
 import com.example.whats_new.pojo.User;
 import com.example.whats_new.pojo.ViewHistory;
-
-import java.util.List;
 
 public interface UserService {
     User findUserByUserName(String username);
@@ -18,7 +18,9 @@ public interface UserService {
 
     void updateAvatar(String url);
 
-    List<ViewHistory> getViewHistory(Integer userId);
+    PageBean<Article> getViewHistory(Integer pageNum, Integer pageSize);
+
+    PageBean<Article> getFavorites(Integer pageNum, Integer pageSize);
 
     ViewHistory viewHistoryIsExist(Integer userId, Integer articleId);
 

@@ -86,13 +86,18 @@ const articleModel = ref({
     categoryId: '',
     coverImg: '',
     content:'',
-    state:''
+    state:'',
+    likes:'',
+    favorites:'',
+    viewNum:''
 })
 //上传封面
 import { useTokenStore } from '@/stores/token';
+import {articleUpdateCoverImgService} from '@/api/article.js'
 const tokenStore = useTokenStore();
-const uploadSuccess = (result)=>{
+const uploadSuccess = async (result)=>{
     articleModel.value.coverImg = result.data;
+    let result1 = await articleUpdateCoverImgService(articleModel.value);
     console.log(result.data);
 }
 

@@ -15,16 +15,19 @@ import UserRecommendVue from '@/views/article/UserRecommend.vue'
 import UserHistoryVue from '@/views/user/UserHistory.vue'
 import UserMineVue from '@/views/user/UserMine.vue'
 import UserFavoriteVue from '@/views/article/UserFavorite.vue'
+import ArticleShowVue from '@/views/article/ArticleShow.vue'
 
 //定义路由关系
 const routes = [
     { path: '/login', component: LoginVue },
     {
         path: '/', component: UserLayoutVue,
+        redirect: '/article/recommend',
         children: [
             {path: '/article/recommend', component: UserRecommendVue},
             {path: '/article/favorite', component: UserFavoriteVue},
             {path: '/article/category', component: UserCategoryVue},
+            {path: '/article/view', name:'ArticleShowVue', component: ArticleShowVue},
             {path: '/user/history', component: UserHistoryVue},
             {path: '/user/mine', component: UserMineVue}
         ]
@@ -40,7 +43,7 @@ const routes = [
             { path: '/admin/article/manage', component: ArticleManageVue },
             { path: '/admin/user/info', component: UserInfoVue },
             { path: '/admin/user/avatar', component: UserAvatarVUe },
-            { path: '/admin/user/password', component: UserResetPasswordVue },
+            { path: '/admin/user/resetPassword', component: UserResetPasswordVue },
         ]
     }
 ]

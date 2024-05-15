@@ -43,6 +43,8 @@ public class CommentServiceImpl implements CommentService {
         //获取用户id
         Map<String , Object> claims = ThreadLocalUtil.get();
         String userId = String.valueOf(claims.get("id"));
+        String username = (String) claims.get("username");
+        comment.setUsername(username);
         comment.setUserId(Integer.parseInt(userId));
         comment.setCreateTime(LocalDateTime.now());
         comment.setUpdateTime(LocalDateTime.now());

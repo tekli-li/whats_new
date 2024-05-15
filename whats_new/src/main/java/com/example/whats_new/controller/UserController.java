@@ -1,9 +1,7 @@
 package com.example.whats_new.controller;
 
 import com.example.whats_new.config.MinioProp;
-import com.example.whats_new.pojo.Result;
-import com.example.whats_new.pojo.User;
-import com.example.whats_new.pojo.ViewHistory;
+import com.example.whats_new.pojo.*;
 import com.example.whats_new.service.MinioService;
 import com.example.whats_new.service.UserService;
 import com.example.whats_new.utils.JwtUtil;
@@ -113,8 +111,14 @@ public class UserController {
     }
 
     @GetMapping("/getViewRecord")
-    public Result getViewRecord(Integer userId) {
-        List<ViewHistory> viewHistories = userService.getViewHistory(userId);
-        return Result.success(viewHistories);
+    public Result getViewRecord(Integer pageNum, Integer pageSize) {
+        PageBean<Article> favorites = userService.getViewHistory(pageNum, pageSize);
+        return Result.success(favorites);
+    }
+
+    @GetMapping("/getFavorite")
+    public Result getFavorite(Integer pageNum, Integer pageSize) {
+        PageBean<Article> favorites = userService.getFavorites(pageNum, pageSize);
+        return Result.success(favorites);
     }
 }

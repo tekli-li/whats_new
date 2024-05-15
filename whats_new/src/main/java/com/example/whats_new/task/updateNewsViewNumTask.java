@@ -38,7 +38,7 @@ public class updateNewsViewNumTask {
 
     @Scheduled(cron = "0/10 * * * * ?")
     public void updateViewCount() throws JsonProcessingException {
-        log.info("开始从redis更新新闻浏览量==>");
+//        log.info("开始从redis更新新闻浏览量==>");
         List<Article> articleList = articleService.listAllArticle();
         for (Article article : articleList) {
             ValueOperations<String , String> operations = stringRedisTemplate.opsForValue();
@@ -55,6 +55,6 @@ public class updateNewsViewNumTask {
             }
 
         }
-        log.info("<==新闻浏览量数据库与redis同步成功");
+//        log.info("<==新闻浏览量数据库与redis同步成功");
     }
 }

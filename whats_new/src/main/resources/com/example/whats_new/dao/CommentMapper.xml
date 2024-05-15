@@ -5,9 +5,9 @@
 <mapper namespace="com.example.whats_new.dao.CommentMapper">
     <insert id="addArticleComment" parameterType="com.example.whats_new.pojo.Comment">
         INSERT INTO comment
-            (content, article_id, user_id, create_time, update_time, root)
+            (content, article_id, user_id, username, create_time, update_time, root)
         VALUES
-        (#{content}, #{articleId}, #{userId}, #{createTime}, #{updateTime},
+        (#{content}, #{articleId}, #{userId}, #{username}, #{createTime}, #{updateTime},
         <if test="root != null">#{root}</if>)
     </insert>
 </mapper>
